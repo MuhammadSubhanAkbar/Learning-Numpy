@@ -57,3 +57,8 @@ print(array.shape, end="\n\n")
 
 # NOTE : The list of element in each list should all be the same, in a multidimensional element of the array should
 #        remain the same.
+
+#We can also select specific element from any list in each type of array, we can make a word by it.
+word = array[1,3,7]
+
+print(word)
