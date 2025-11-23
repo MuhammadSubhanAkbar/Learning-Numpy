@@ -38,7 +38,6 @@ print(array.shape, end="\n\n")
 print("Dimensions:",array.ndim)
 print()
 
-
 #An array more than one 2d arrays create a 3d array
 
 array = np.array([
@@ -55,10 +54,10 @@ print("Dimensions:",array.ndim)
 # We can find the shape of the array
 print(array.shape, end="\n\n")
 
-# NOTE : The list of element in each list should all be the same, in a multidimensional element of the array should
-#        remain the same.
+# FIXED: Using valid indices for the 3D array with shape (3, 3, 4)
+word = array[1, 2, 3]  # This selects 'L' from the second 2D array, third row, fourth column
+print("Selected element:", word)
 
-#We can also select specific element from any list in each type of array, we can make a word by it.
-word = array[1,3,7]
-
-print(word)
+# Example of creating a word by selecting multiple elements
+word = array[0, 0, 0] + array[0, 0, 1] + array[0, 0, 2]  # Creates "ABC"
+print("Created word:", word)
