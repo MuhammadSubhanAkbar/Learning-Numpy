@@ -1,55 +1,46 @@
 from manim import *
 import numpy as np
 
-class TrigGraph(Scene):
+class Graphing(Scene):
     def construct(self):
-        # Create axes with appropriate range for trig functions
-        axes = Axes(
-            x_range=[0, 5, 0.5],  # Finer increments for trig
-            y_range=[-2, 3, 1],   # Expanded y-range for oscillations
-            x_length=8,
+        
+        #making planes
+        my_Plane = NumberPlane(
+            x_range=[-6,6],
+            x_length=5,
+            y_range=[-10,10],
             y_length=5,
-            axis_config={
-                "include_numbers": True,
-                "include_tip": True,
-                "font_size": 24,
-            }
+            )
+        
+        #Adding coordinates
+        my_Plane.add_coordinates()
+        my_Plane.shift(RIGHT*3)
+
+
+        #making the function the function
+        my_function = my_Plane.get_graph(
+            lambda x: np.sin(2*x**2)**2 / np.tan(x**2),  # Fixed: np.sin(...)**2 not np.sin**2(...)
+            x_range=[-6,6],
+            color=GREEN_B
+            )
+        
+        area = my_Plane.get_area(
+            graph=my_function, 
+            x_range=[-5,5],
+            color=[BLUE, YELLOW]
+            )
+        
+        label = MathTex(r"\frac{\sin^2(2x^2)}{\tan(x^2)}").next_to(  # Fixed LaTeX
+            my_Plane, UP, buff=0.2
         )
-        
-        # Position axes
-        axes.to_edge(UP, buff=0.5)
-        
-        # Add axis labels
-        axis_labels = axes.get_axis_labels(x_label="x", y_label="f(x)")
-        
-        # Define the function - fix the square root issue
-        def trig_func(x):
-            # Use absolute value or handle negative cos(x) properly
-            cos_term = np.sqrt(np.abs(np.cos(x))) * np.sign(np.cos(x))
-            sin_term = np.sin(2 * x**2)
-            constant = np.pi / 4
-            return cos_term + sin_term + constant
-        
-        # Create the graph
-        graph = axes.plot(
-            trig_func,
-            x_range=[0, 5, 0.01],  # Fine step for smooth curve
-            color=YELLOW,
-            use_smoothing=True
+
+        horiz_line = Line(
+            start=my_Plane.c2p(0, my_function.underlying_function(-2)),
+            end=my_Plane.c2p(-2, my_function.underlying_function(-2)),  # Added missing comma
+            stroke_color=YELLOW,  # Fixed: added comma above
+            stroke_width=10
         )
-        
-        # Add graph label
-        graph_label = axes.get_graph_label(
-            graph,
-            label=r"f(x) = \sqrt{|\cos(x)|}\cdot\text{sign}(\cos(x)) + \sin(2x^2) + \frac{\pi}{4}",
-            x_val=3,
-            direction=UP,
-            font_size=28
-        )
-        
-        # Animate everything
-        self.play(Create(axes), Write(axis_labels))
-        self.wait(0.5)
-        self.play(Create(graph), run_time=3)  # Longer run time for complex graph
-        self.play(Write(graph_label))
-        self.wait(2)
+
+        self.play(DrawBorderThenFill(my_Plane))
+        self.play(Create(my_function), Write(label))
+        self.play(FadeIn(area))
